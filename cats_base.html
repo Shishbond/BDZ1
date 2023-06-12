@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Котики-обормотики</title>
+    <style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background-color: #FFA500;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo {
+        height: 90px;
+        width: auto;
+        margin-right: 10px;
+        border-radius: 50%;
+        border: 2px solid #f9c4d2;
+        overflow: hidden;
+    }
+
+    .logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 0;
+        color: black;
+        font-family: cursive;
+    }
+
+    .button-container {
+        display: flex;
+        gap: 10px;
+        flex-grow: 1;
+        justify-content: center;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        color: black;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+        background-color: #f9c4d2;
+    }
+
+    .refresh {
+        background-color: #551a8b;
+        color: white;
+    }
+
+    .add {
+        background-color: #8b008b;
+        color: white;
+    }
+
+    .database {
+        background-color: #ffffff;
+        color: black;
+    }
+
+    footer {
+        background-color: #000;
+        color: #fff;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+    }
+
+    .cat-card {
+        display: inline-block;
+        width: 300px;
+        margin-right: 20px;
+        background-color: #fde8ed;
+        text-align: center;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 400px;
+        border-radius: 10px; 
+    }
+
+    .modal-content input,
+    .modal-content button {
+        margin-top: 10px;
+        width: 95%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .modal-content label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold; 
+    }
+
+    .modal-content p {
+        margin-bottom: 5px;
+    }
+</style>
+</head>
+<header>
+    <h1>Кошачья база</h1>
+    <div class="logo-container">
+        <div class="logo">
+            <img src="https://alenaprozorova.ru/wp-content/uploads/2020/10/cat-1.png" alt="Логотип">
+        </div>
+    </div>
+     <div class="button-container">
+        <a class="button refresh" href="javascript:location.reload()">Обновить</a>
+        <a class="button add" href="#" onclick="openForm()">Добавить котика</a>
+        <a class="button database" href="C:\Users\niksh\Desktop\BDZ1\cats.html">Главная</a>
+    </div>
+
+</header>
+<body>
+<div id="catCardsContainer" style="margin-top: 150px;"></div>
+
+
+ <div id="addCatModal" class="modal">
+        <div class="modal-content">
+            <form id="catForm" onsubmit="event.preventDefault(); addCat()">
+        <label for="nameInput">Имя котика:</label>
+        <input type="text" id="nameInput" required><br>
+        <label for="imageInput">Ссылка на изображение:</label>
+        <input type="text" id="imageInput" required><br>
+        <label for="ageInput">Возраст котика:</label>
+        <input type="number" id="ageInput" required><br>
+        <label for="rateInput">Рейтинг котика (от 1 до 10):</label>
+        <input type="number" id="rateInput" min="1" max="10" required><br>
+        <label for="favoriteInput">На главной странице:</label>
+        <input type="checkbox" id="favoriteInput"><br>
+        <label for="descriptionInput">Описание котика (не более 100 символов):</label>
+        <input type="text" id="descriptionInput" maxlength="100" required><br>
+        <button type="submit">Добавить</button>
+        <button type="button" onclick="closeForm()">Закрыть</button>
+    </form>
+</div>
+ </div>
+
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  
+    fetch('https://cats.petiteweb.dev/api/single/shishbond/show', {
+        method: 'GET'
+    })
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        
+        data.forEach(function(cat) {
+            if (!cat.favorite) {
+                createCatCard(cat);
+            }
+        });
+    })
+    .catch(function(error) {
+        console.error(error);
+        alert("Ошибка при получении данных о котиках: " + error.message);
+    });
+});
+
+
+function createCatCard(cat) {
+    
+    var cardContainer = document.createElement('div');
+    cardContainer.classList.add('cat-card');
+    cardContainer.style.border = '1px solid #f9c4d2';
+    cardContainer.style.borderRadius = '5px';
+    cardContainer.style.padding = '10px';
+    cardContainer.style.marginBottom = '20px';
+
+   
+    var catImage = document.createElement('img');
+    catImage.src = cat.image;
+    catImage.style.width = '100%';
+    catImage.style.border = '2px solid #f9c4d2';
+    catImage.style.borderRadius = '5px';
+
+   
+    var catName = document.createElement('h3');
+    catName.textContent = cat.name;
+
+   
+    var detailsButton = document.createElement('button');
+    detailsButton.textContent = 'Подробнее';
+    detailsButton.addEventListener('click', function() {
+        openDetailsModal(cat);
+    });
+
+    
+    cardContainer.appendChild(catImage);
+    cardContainer.appendChild(catName);
+    cardContainer.appendChild(detailsButton);
+
+   
+    var catCardsContainer = document.getElementById('catCardsContainer');
+    catCardsContainer.appendChild(cardContainer);
+}
+
+
+function openDetailsModal(cat) {
+    
+    var modal = document.createElement('div');
+    modal.classList.add('modal');
+    modal.style.display = 'block';
+
+
+    var modalContent = document.createElement('div');
+    modalContent.classList.add('modal-content');
+
+    
+    var catId = document.createElement('p');
+    catId.textContent = 'Номер ' + cat.id;
+
+    
+    var catImage = document.createElement('img');
+    catImage.src = cat.image;
+    catImage.style.width = '300px';
+    catImage.style.height = '300px';
+
+   
+    var catName = document.createElement('h3');
+    catName.textContent = cat.name;
+
+    
+    var catAge = document.createElement('p');
+    catAge.textContent = 'Возраст: ' + cat.age;
+
+   
+    var catRate = document.createElement('p');
+    catRate.textContent = 'Рейтинг: ' + cat.rate;
+
+    
+    var catDescription = document.createElement('p');
+    catDescription.textContent = 'Описание: ' + cat.description;
+
+   
+    var catFavorite = document.createElement('p');
+    catFavorite.textContent = 'Избранный: ' + cat.favorite;
+
+    
+    var editButton = document.createElement('button');
+    editButton.textContent = 'Изменить';
+    editButton.addEventListener('click', function() {
+        openEditModal(cat);
+    });
+
+    
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Удалить';
+    deleteButton.addEventListener('click', function() {
+        deleteCat(cat);
+    });
+
+   
+    var closeButton = document.createElement('button');
+    closeButton.textContent = 'Закрыть';
+    closeButton.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    
+    modalContent.appendChild(catId);
+    modalContent.appendChild(catImage);
+    modalContent.appendChild(catName);
+    modalContent.appendChild(catAge);
+    modalContent.appendChild(catRate);
+    modalContent.appendChild(catDescription);
+    modalContent.appendChild(catFavorite);
+    modalContent.appendChild(editButton);
+    modalContent.appendChild(deleteButton);
+    modalContent.appendChild(closeButton);
+
+   
+    modal.appendChild(modalContent);
+
+    
+    document.body.appendChild(modal);
+}
+
+
+function openEditModal(cat) {
+   
+    var modal = document.createElement('div');
+    modal.classList.add('modal');
+    modal.style.display = 'block';
+
+    
+    var modalContent = document.createElement('div');
+    modalContent.classList.add('modal-content');
+
+   
+    var editForm = document.createElement('form');
+    editForm.id = 'editForm';
+
+
+    var nameLabel = document.createElement('label');
+    nameLabel.textContent = 'Имя котика:';
+    var nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.value = cat.name;
+    nameInput.required = true;
+
+    var imageLabel = document.createElement('label');
+    imageLabel.textContent = 'Ссылка на изображение:';
+    var imageInput = document.createElement('input');
+    imageInput.type = 'text';
+    imageInput.value = cat.image;
+    imageInput.required = true;
+
+    var ageLabel = document.createElement('label');
+    ageLabel.textContent = 'Возраст котика:';
+    var ageInput = document.createElement('input');
+    ageInput.type = 'number';
+    ageInput.value = cat.age;
+    ageInput.required = true;
+
+    var rateLabel = document.createElement('label');
+    rateLabel.textContent = 'Рейтинг котика (от 1 до 10):';
+    var rateInput = document.createElement('input');
+    rateInput.type = 'number';
+    rateInput.min = '1';
+    rateInput.max = '10';
+    rateInput.value = cat.rate;
+    rateInput.required = true;
+
+    var favoriteLabel = document.createElement('label');
+    favoriteLabel.textContent = 'На главной странице:';
+    var favoriteInput = document.createElement('input');
+    favoriteInput.type = 'checkbox';
+    favoriteInput.checked = cat.favorite;
+
+    var descriptionLabel = document.createElement('label');
+    descriptionLabel.textContent = 'Описание котика (не более 100 символов):';
+    var descriptionInput = document.createElement('input');
+    descriptionInput.type = 'text';
+    descriptionInput.value = cat.description;
+    descriptionInput.maxLength = '100';
+    descriptionInput.required = true;
+
+    var submitButton = document.createElement('button');
+    submitButton.type = 'submit';
+    submitButton.textContent = 'Изменить';
+
+    var closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    closeButton.textContent = 'Закрыть';
+    closeButton.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    
+    editForm.appendChild(nameLabel);
+    editForm.appendChild(nameInput);
+    editForm.appendChild(imageLabel);
+    editForm.appendChild(imageInput);
+    editForm.appendChild(ageLabel);
+    editForm.appendChild(ageInput);
+    editForm.appendChild(rateLabel);
+    editForm.appendChild(rateInput);
+    editForm.appendChild(favoriteLabel);
+    editForm.appendChild(favoriteInput);
+    editForm.appendChild(descriptionLabel);
+    editForm.appendChild(descriptionInput);
+    editForm.appendChild(submitButton);
+    editForm.appendChild(closeButton);
+
+    
+    modalContent.appendChild(editForm);
+
+    
+    modal.appendChild(modalContent);
+
+    
+    document.body.appendChild(modal);
+
+    
+    editForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        editCat(cat.id);
+    });
+}
+
+
+function editCat(catId) {
+    
+    var name = document.getElementById('nameInput').value;
+    var image = document.getElementById('imageInput').value;
+    var age = document.getElementById('ageInput').value;
+    var rate = document.getElementById('rateInput').value;
+    var favorite = document.getElementById('favoriteInput').checked;
+    var description = document.getElementById('descriptionInput').value;
+
+    var catData = {
+        "name": name,
+        "image": image,
+        "age": parseInt(age),
+        "rate": parseInt(rate),
+        "favorite": favorite,
+        "description": description
+    };
+
+    
+    fetch('https://cats.petiteweb.dev/api/single/shishbond/update/' + catId, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(catData)
+    })
+    .then(function(response) {
+        if (response.ok) {
+            alert('Котик успешно изменен!');
+            location.reload();
+        } else {
+            throw new Error('Ошибка при изменении котика.');
+        }
+    })
+    .catch(function(error) {
+        console.error(error);
+        alert("Ошибка при изменении котика: " + error.message);
+    });
+}
+
+
+
+function deleteCat(cat) {
+    if (confirm("Вы уверены, что хотите удалить котика?")) {
+        
+        fetch('https://cats.petiteweb.dev/api/single/shishbond/delete/' + cat.id, {
+            method: 'DELETE'
+        })
+        .then(function(response) {
+            if (response.ok) {
+                alert('Котик успешно удален!');
+                location.reload();
+            } else {
+                throw new Error('Ошибка при удалении котика.');
+            }
+        })
+        .catch(function(error) {
+            console.error(error);
+            alert("Ошибка при удалении котика: " + error.message);
+        });
+    }
+}
+
+function openForm() {
+        document.getElementById("addCatModal").style.display = "block";
+    }
+
+    function closeForm() {
+        document.getElementById("addCatModal").style.display = "none";
+    }
+
+
+
+    function addCat() {
+        var id = Math.floor(Math.random() * 1000000) + 1; // Генерация случайного ID
+        var name = document.getElementById("nameInput").value;
+        var image = document.getElementById("imageInput").value;
+        var age = document.getElementById("ageInput").value;
+        var rate = document.getElementById("rateInput").value;
+        var favorite = document.getElementById("favoriteInput").checked;
+        var description = document.getElementById("descriptionInput").value;
+
+        var catData = {
+            "id": id,
+            "name": name,
+            "image": image,
+            "age": parseInt(age),
+            "rate": parseInt(rate),
+            "favorite": favorite,
+            "description": description
+        };
+
+        
+        fetch('https://cats.petiteweb.dev/api/single/shishbond/add', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(catData)
+        })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            console.log(data);
+            alert("Кот успешно добавлен в Базу данных");
+            closeForm();
+        })
+        .catch(function(error) {
+            console.error(error);
+            alert("Ошибка при добавлении кота: " + error.message);
+        });
+    }
+</script>
+</body>
+<footer>
+    <p>©️2023 сделал Shishbond</p>
+</footer>
+</html>
