@@ -162,7 +162,7 @@
      <div class="button-container">
         <a class="button refresh" href="javascript:location.reload()">Обновить</a>
         <a class="button add" href="#" onclick="openForm()">Добавить котика</a>
-        <a class="button database" href="C:\Users\niksh\Desktop\BDZ1\cats.html">Главная</a>
+        <a class="button database" href=".\cats.html">Главная</a>
     </div>
 
 </header>
@@ -217,7 +217,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 function createCatCard(cat) {
     
-    var cardContainer = document.createElement('div');
+    const cardContainer = document.createElement('div');
     cardContainer.classList.add('cat-card');
     cardContainer.style.border = '1px solid #f9c4d2';
     cardContainer.style.borderRadius = '5px';
@@ -225,18 +225,18 @@ function createCatCard(cat) {
     cardContainer.style.marginBottom = '20px';
 
    
-    var catImage = document.createElement('img');
+    const catImage = document.createElement('img');
     catImage.src = cat.image;
     catImage.style.width = '100%';
     catImage.style.border = '2px solid #f9c4d2';
     catImage.style.borderRadius = '5px';
 
    
-    var catName = document.createElement('h3');
+    const catName = document.createElement('h3');
     catName.textContent = cat.name;
 
    
-    var detailsButton = document.createElement('button');
+    const detailsButton = document.createElement('button');
     detailsButton.textContent = 'Подробнее';
     detailsButton.addEventListener('click', function() {
         openDetailsModal(cat);
@@ -248,67 +248,67 @@ function createCatCard(cat) {
     cardContainer.appendChild(detailsButton);
 
    
-    var catCardsContainer = document.getElementById('catCardsContainer');
+    const catCardsContainer = document.getElementById('catCardsContainer');
     catCardsContainer.appendChild(cardContainer);
 }
 
 
 function openDetailsModal(cat) {
     
-    var modal = document.createElement('div');
+    const modal = document.createElement('div');
     modal.classList.add('modal');
     modal.style.display = 'block';
 
 
-    var modalContent = document.createElement('div');
+    const modalContent = document.createElement('div');
     modalContent.classList.add('modal-content');
 
     
-    var catId = document.createElement('p');
+    const catId = document.createElement('p');
     catId.textContent = 'Номер ' + cat.id;
 
     
-    var catImage = document.createElement('img');
+    const catImage = document.createElement('img');
     catImage.src = cat.image;
     catImage.style.width = '300px';
     catImage.style.height = '300px';
 
    
-    var catName = document.createElement('h3');
+    const catName = document.createElement('h3');
     catName.textContent = cat.name;
 
     
-    var catAge = document.createElement('p');
+    const catAge = document.createElement('p');
     catAge.textContent = 'Возраст: ' + cat.age;
 
    
-    var catRate = document.createElement('p');
+    const catRate = document.createElement('p');
     catRate.textContent = 'Рейтинг: ' + cat.rate;
 
     
-    var catDescription = document.createElement('p');
+    const catDescription = document.createElement('p');
     catDescription.textContent = 'Описание: ' + cat.description;
 
    
-    var catFavorite = document.createElement('p');
+    const catFavorite = document.createElement('p');
     catFavorite.textContent = 'Избранный: ' + cat.favorite;
 
     
-    var editButton = document.createElement('button');
+    const editButton = document.createElement('button');
     editButton.textContent = 'Изменить';
     editButton.addEventListener('click', function() {
         openEditModal(cat);
     });
 
     
-    var deleteButton = document.createElement('button');
+    const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Удалить';
     deleteButton.addEventListener('click', function() {
         deleteCat(cat);
     });
 
    
-    var closeButton = document.createElement('button');
+    const closeButton = document.createElement('button');
     closeButton.textContent = 'Закрыть';
     closeButton.addEventListener('click', function() {
         modal.style.display = 'none';
@@ -335,76 +335,77 @@ function openDetailsModal(cat) {
 
 
 function openEditModal(cat) {
-   
-    var modal = document.createElement('div');
+    const modal = document.createElement('div');
     modal.classList.add('modal');
     modal.style.display = 'block';
 
-    
-    var modalContent = document.createElement('div');
+    const modalContent = document.createElement('div');
     modalContent.classList.add('modal-content');
 
-   
-    var editForm = document.createElement('form');
+    const editForm = document.createElement('form');
     editForm.id = 'editForm';
 
-
-    var nameLabel = document.createElement('label');
+    const nameLabel = document.createElement('label');
     nameLabel.textContent = 'Имя котика:';
-    var nameInput = document.createElement('input');
+    const nameInput = document.createElement('input');
     nameInput.type = 'text';
     nameInput.value = cat.name;
     nameInput.required = true;
+    nameInput.id = 'nameInput';
 
-    var imageLabel = document.createElement('label');
+    const imageLabel = document.createElement('label');
     imageLabel.textContent = 'Ссылка на изображение:';
-    var imageInput = document.createElement('input');
+    const imageInput = document.createElement('input');
     imageInput.type = 'text';
     imageInput.value = cat.image;
     imageInput.required = true;
+    imageInput.id = 'imageInput';
 
-    var ageLabel = document.createElement('label');
+    const ageLabel = document.createElement('label');
     ageLabel.textContent = 'Возраст котика:';
-    var ageInput = document.createElement('input');
+    const ageInput = document.createElement('input');
     ageInput.type = 'number';
     ageInput.value = cat.age;
     ageInput.required = true;
+    ageInput.id = 'ageInput';
 
-    var rateLabel = document.createElement('label');
+    const rateLabel = document.createElement('label');
     rateLabel.textContent = 'Рейтинг котика (от 1 до 10):';
-    var rateInput = document.createElement('input');
+    const rateInput = document.createElement('input');
     rateInput.type = 'number';
     rateInput.min = '1';
     rateInput.max = '10';
     rateInput.value = cat.rate;
     rateInput.required = true;
+    rateInput.id = 'rateInput';
 
-    var favoriteLabel = document.createElement('label');
+    const favoriteLabel = document.createElement('label');
     favoriteLabel.textContent = 'На главной странице:';
-    var favoriteInput = document.createElement('input');
+    const favoriteInput = document.createElement('input');
     favoriteInput.type = 'checkbox';
     favoriteInput.checked = cat.favorite;
+    favoriteInput.id = 'favoriteInput';
 
-    var descriptionLabel = document.createElement('label');
+    const descriptionLabel = document.createElement('label');
     descriptionLabel.textContent = 'Описание котика (не более 100 символов):';
-    var descriptionInput = document.createElement('input');
+    const descriptionInput = document.createElement('input');
     descriptionInput.type = 'text';
     descriptionInput.value = cat.description;
     descriptionInput.maxLength = '100';
     descriptionInput.required = true;
+    descriptionInput.id = 'descriptionInput';
 
-    var submitButton = document.createElement('button');
+    const submitButton = document.createElement('button');
     submitButton.type = 'submit';
     submitButton.textContent = 'Изменить';
 
-    var closeButton = document.createElement('button');
+    const closeButton = document.createElement('button');
     closeButton.type = 'button';
     closeButton.textContent = 'Закрыть';
     closeButton.addEventListener('click', function() {
         modal.style.display = 'none';
     });
 
-    
     editForm.appendChild(nameLabel);
     editForm.appendChild(nameInput);
     editForm.appendChild(imageLabel);
@@ -420,33 +421,27 @@ function openEditModal(cat) {
     editForm.appendChild(submitButton);
     editForm.appendChild(closeButton);
 
-    
     modalContent.appendChild(editForm);
 
-    
     modal.appendChild(modalContent);
 
-    
     document.body.appendChild(modal);
 
-    
     editForm.addEventListener('submit', function(event) {
         event.preventDefault();
         editCat(cat.id);
     });
 }
 
-
 function editCat(catId) {
-    
-    var name = document.getElementById('nameInput').value;
-    var image = document.getElementById('imageInput').value;
-    var age = document.getElementById('ageInput').value;
-    var rate = document.getElementById('rateInput').value;
-    var favorite = document.getElementById('favoriteInput').checked;
-    var description = document.getElementById('descriptionInput').value;
+    const name = document.getElementById('nameInput').value;
+    const image = document.getElementById('imageInput').value;
+    const age = document.getElementById('ageInput').value;
+    const rate = document.getElementById('rateInput').value;
+    const favorite = document.getElementById('favoriteInput').checked;
+    const description = document.getElementById('descriptionInput').value;
 
-    var catData = {
+    const catData = {
         "name": name,
         "image": image,
         "age": parseInt(age),
@@ -455,7 +450,6 @@ function editCat(catId) {
         "description": description
     };
 
-    
     fetch('https://cats.petiteweb.dev/api/single/shishbond/update/' + catId, {
         method: 'PUT',
         headers: {
@@ -502,56 +496,54 @@ function deleteCat(cat) {
 }
 
 function openForm() {
-        document.getElementById("addCatModal").style.display = "block";
-    }
+    document.getElementById("addCatModal").style.display = "block";
+}
 
-    function closeForm() {
-        document.getElementById("addCatModal").style.display = "none";
-    }
+function closeForm() {
+    document.getElementById("addCatModal").style.display = "none";
+}
 
+function addCat() {
+    const id = Math.floor(Math.random() * 1000000) + 1; // Генерация случайного ID
+    const name = document.getElementById("nameInput").value;
+    const image = document.getElementById("imageInput").value;
+    const age = document.getElementById("ageInput").value;
+    const rate = document.getElementById("rateInput").value;
+    const favorite = document.getElementById("favoriteInput").checked;
+    const description = document.getElementById("descriptionInput").value;
 
+    const catData = {
+        "id": id,
+        "name": name,
+        "image": image,
+        "age": parseInt(age),
+        "rate": parseInt(rate),
+        "favorite": favorite,
+        "description": description
+    };
 
-    function addCat() {
-        var id = Math.floor(Math.random() * 1000000) + 1; // Генерация случайного ID
-        var name = document.getElementById("nameInput").value;
-        var image = document.getElementById("imageInput").value;
-        var age = document.getElementById("ageInput").value;
-        var rate = document.getElementById("rateInput").value;
-        var favorite = document.getElementById("favoriteInput").checked;
-        var description = document.getElementById("descriptionInput").value;
-
-        var catData = {
-            "id": id,
-            "name": name,
-            "image": image,
-            "age": parseInt(age),
-            "rate": parseInt(rate),
-            "favorite": favorite,
-            "description": description
-        };
-
-        
-        fetch('https://cats.petiteweb.dev/api/single/shishbond/add', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(catData)
-        })
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(data) {
-            console.log(data);
-            alert("Кот успешно добавлен в Базу данных");
-            closeForm();
-        })
-        .catch(function(error) {
-            console.error(error);
-            alert("Ошибка при добавлении кота: " + error.message);
-        });
-    }
+    
+    fetch('https://cats.petiteweb.dev/api/single/shishbond/add', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(catData)
+    })
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        console.log(data);
+        alert("Кот успешно добавлен в Базу данных");
+        closeForm();
+    })
+    .catch(function(error) {
+        console.error(error);
+        alert("Ошибка при добавлении кота: " + error.message);
+    });
+}
 </script>
 </body>
 <footer>
